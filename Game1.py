@@ -476,6 +476,10 @@ home = pygame.image.load("home.png")
 home = pygame.transform.scale(home, [64, 64])
 homesq = pygame.draw.rect(screen, GREEN, [925, 13, 62, 66])
 
+backagain = pygame.image.load("backagain.png")
+backagain = pygame.transform.scale(backagain, [58, 58])
+backagain.set_colorkey(WHITE)
+
 #WARRIOR GAME
 
 class Bomb(pygame.sprite.Sprite):
@@ -753,6 +757,8 @@ def main():
     global micro3
     global variab1
     global restart
+    global backagain
+
     if var:
         noblit = True
         #variab1 = 0
@@ -814,7 +820,7 @@ def main():
         enemy_list = pygame.sprite.Group()
         heart_list = pygame.sprite.Group()
 
-        
+
         heart_list.add(heart)
         heart_list.add(heart1)
 
@@ -877,6 +883,7 @@ def main():
         
             
     screen.fill(CYAN)
+    
     if current_level_no == 0:
         screen.blit(lvl_1, [0, 0])
     if current_level_no == 1:
@@ -969,17 +976,16 @@ def main():
                 onceonly = False  
         if yes == "yes":
             onceonly = True
+            player.rect.y = 198
+            player.rect.x = 508
+            skeleton.rect.y = 171
+            skeleton.rect.x = 158
             yes = "no" 
 
     
 #        portal.rect.x = 519
 #       portal.rect.y = 300
-        if yes == "yes":
-            player.rect.y = 198
-            player.rect.x = 516
-            skeleton.rect.y = 171
-            skeleton.rect.x = 158
-            yes = "no"
+
         active_sprite_list.remove(portal)
         portal_list.remove(portal)
         active_sprite_list.add(portal2)
@@ -1001,6 +1007,7 @@ def main():
             #yes = "no"
 
     active_sprite_list.update()
+    screen.blit(backagain, [925, 15])
     if pygame.sprite.groupcollide(player_list, enemy_list, False, False):
         death.play()
         lives-=1
@@ -1038,7 +1045,7 @@ def main():
             if yes == "yes":
                 #onceonly = True
                 player.rect.y = 220
-                player.rect.x = 516
+                player.rect.x = 508
                 skeleton.rect.y = 171
                 skeleton.rect.x = 158
                 yes = "no"
@@ -1104,7 +1111,7 @@ def main():
             if current_level_no == 4:
                 if yes == "yes":
                     player.rect.y = 220
-                    player.rect.x = 516
+                    player.rect.x = 508
                     skeleton.rect.y = 171
                     skeleton.rect.x = 158
                     yes = "no"
@@ -1166,7 +1173,7 @@ def main():
             if current_level_no == 4:
                 if yes == "yes":
                     player.rect.y = 220
-                    player.rect.x = 516
+                    player.rect.x = 508
                     skeleton.rect.y = 171
                     skeleton.rect.x = 158
                     yes = "no"
@@ -1277,7 +1284,7 @@ def main2():
     global highscr
     global micro3
     global microlist
-
+    global backagain
     global ekbarbhaibashogya
     if var2:
         bomb = Bomb()
@@ -1405,6 +1412,7 @@ def main2():
     screen.blit(lives_print, [10, 40])
     soldier_hit_list = pygame.sprite.spritecollide(soldier, bomb_list, True)
     micro_hit_list = pygame.sprite.spritecollide(soldier, microlist, True)
+    screen.blit(backagain, [925, 15])
     for micro in micro_hit_list:
         micro.kill()
 
@@ -1504,6 +1512,7 @@ def main3():
     global microfir
     global microsec
     global microthi
+    global backagain
     if var3:
         screen_width = 1000
         screen_height = 500
@@ -1555,8 +1564,8 @@ def main3():
     scorebl = font2go.render ("Score: " + str(scorego), True, BLACK)
     minbl = font2go.render (str(minutes) + ":", True, BLACK)
     sec = font2go.render (str(secstr), True, BLACK)
-    
-    
+
+    #print(seconds)    
     
     if an == 9:
         active = False
@@ -1576,8 +1585,8 @@ def main3():
         currentlevelno = 5
     if p == 9:
         p +=1
-        final_time = current_time
-        finalsec = current_time//1000
+        final_time = 300 - ((minutes*60)+seconds)
+        finalsec = final_time
         finalmin = (finalsec)//60
         finalsec = str(finalsec - (finalmin * 60))
         if len(finalsec) == 1:
@@ -1624,7 +1633,7 @@ def main3():
         if yes == True:
             yes = False
             screen.blit(first, [0, 0])
-           # print("fir")
+            screen.blit(backagain, [925, 15])
         
             screen.blit(micro2, [712,306])
 
@@ -1633,15 +1642,18 @@ def main3():
         if yes == True:
             yes = False
             screen.blit(second, [0, 0])
+            screen.blit(backagain, [925, 15])
             screen.blit(micro2, [461,250])
             #microsec = pygame.draw.ellipse (screen, LIME, [461, 250, 20, 20], 3)
     if currentlevelno == 3 and yes == True:
             yes = False
             screen.blit(third, [0, 0])
+            screen.blit(backagain, [925, 15])
             screen.blit(micro2, [221,269])
     
     
-    if scorego < 23 and current_time < 300000:
+    if scorego < 23 and (minutes * 60 + seconds) > 0:
+        #print(minutes * 60 + seconds, "not")
         pygame.draw.rect(screen, LIME, [0, 0, 97, 60])
         screen.blit(scorebl, [10, 10])
         screen.blit(minbl, [10, 30])
@@ -1668,14 +1680,14 @@ def main3():
                         prevhigh = "yes"
                     else:
                         lasthi = i
-    if score < 23 and current_time > 300000:
-        
+    if scorego < 23 and minutes == 0 and seconds == 0:
+        #print(minutes * 60 + seconds)
         screen.blit(lost, [0, 0])
         screen.blit(home, [925, 15])
         house = True
         currentlevelno +=1
     if lasthi != 0:
-        lastsec = int(lasthi//1000)
+        lastsec = int(lasthi)
         lastmin = int((lastsec)//60)
         lastsec = str(lastsec - (lastmin * 60))
         if len(lastsec) == 1:
@@ -1689,6 +1701,7 @@ def main3():
         screen.blit(finalbl2, [545, 301])
         screen.blit(finalbl, [578, 301])    
         #screen.blit(high, [55, 227])
+
         
 while not done:
     
@@ -1697,7 +1710,7 @@ while not done:
             done = True
         
         if event.type == pygame.MOUSEBUTTONDOWN:
-           # print(event.pos)
+            #print(event.pos)
             if visible:
                 if one.collidepoint(event.pos):
                     
@@ -1768,7 +1781,6 @@ while not done:
                     enemy_list = pygame.sprite.Group()
                     heart_list = pygame.sprite.Group()
 
-                    
                     heart_list.add(heart)
                     heart_list.add(heart1)
 
@@ -2040,6 +2052,7 @@ while not done:
     if game_num == 2:
         main3()
     
+
     clock.tick(60)
 
     # Go ahead and update the screen with what we've drawn.
